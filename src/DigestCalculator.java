@@ -26,9 +26,15 @@ public class DigestCalculator
             List<FileDigest> registeredDigests = digestListService.readDigests();
             List<FileDigest> calculatedDigests = digestService.calculateDigests();
 
-            for (FileDigest registeredDigest : registeredDigests)
+            DigestVerificationService verificationService = new DigestVerificationService(
+                calculatedDigests,
+                registeredDigests
+            );
+
+            List<DigestResult> results = verificationService.verifyDigests();
+            for (DigestResult result : results)
             {
-                System.out.println(registeredDigest);
+                System.out.println(result);
             }
 
         } 

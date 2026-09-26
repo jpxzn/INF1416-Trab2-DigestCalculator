@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CATALOG>
     <FILE_ENTRY>
-        <FILE_NAME>arquivo1.txt</FILE_NAME>
+        <FILE_NAME>ok.txt</FILE_NAME>
         <DIGEST_ENTRY>
             <DIGEST_TYPE>SHA256</DIGEST_TYPE>
-            <DIGEST_HEX>e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</DIGEST_HEX>
-        </DIGEST_ENTRY>
-        <DIGEST_ENTRY>
-            <DIGEST_TYPE>MD5</DIGEST_TYPE>
-            <DIGEST_HEX>d41d8cd98f00b204e9800998ecf8427e</DIGEST_HEX>
+            <DIGEST_HEX>f695f8be16ce0adaa57bd2432d787d0879deb58bb1ee10c00c094f33490e7eb5</DIGEST_HEX>
         </DIGEST_ENTRY>
     </FILE_ENTRY>
 
     <FILE_ENTRY>
-        <FILE_NAME>arquivo2.txt</FILE_NAME>
+        <FILE_NAME>not-ok.txt</FILE_NAME>
+        <DIGEST_ENTRY>
+            <DIGEST_TYPE>SHA256</DIGEST_TYPE>
+            <DIGEST_HEX>9e6c350c5cbbc731dae4d133c64506c265eefa2ecff7dd9838651f2b777a902f</DIGEST_HEX>
+        </DIGEST_ENTRY>
+    </FILE_ENTRY>
+
+    <FILE_ENTRY>
+        <FILE_NAME>not-found-existing.txt</FILE_NAME>
         <DIGEST_ENTRY>
             <DIGEST_TYPE>SHA1</DIGEST_TYPE>
-            <DIGEST_HEX>da39a3ee5e6b4b0d3255bfef95601890afd80709</DIGEST_HEX>
+            <DIGEST_HEX>732279ecc73276dbb3a1fac976f118bc548a7bfb</DIGEST_HEX>
         </DIGEST_ENTRY>
+    </FILE_ENTRY>
+
+    <FILE_ENTRY>
+        <FILE_NAME>collision-a.txt</FILE_NAME>
         <DIGEST_ENTRY>
-            <DIGEST_TYPE>SHA512</DIGEST_TYPE>
-            <DIGEST_HEX>cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e</DIGEST_HEX>
+            <DIGEST_TYPE>SHA256</DIGEST_TYPE>
+            <DIGEST_HEX>2ac3f3f97e9d5346fba788f84929a2eeac12c191bb03154c3e839d38548d22b1</DIGEST_HEX>
         </DIGEST_ENTRY>
     </FILE_ENTRY>
 </CATALOG>

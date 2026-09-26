@@ -6,6 +6,7 @@
  * João Pedro Zaidman dos Santos Gonçalves - Matrícula: 2320464
  * Breno de Andrade Soares - Matrícula: 2320363
  */
+
 public enum DigestAlgorithm {
 
     MD5("MD5"),
