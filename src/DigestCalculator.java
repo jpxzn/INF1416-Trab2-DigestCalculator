@@ -37,6 +37,9 @@ public class DigestCalculator
                 System.out.println(result);
             }
 
+            
+            digestListService.addNotFoundDigests(results);
+
         } 
         catch (IllegalArgumentException | IOException | NoSuchAlgorithmException exception) 
         {
