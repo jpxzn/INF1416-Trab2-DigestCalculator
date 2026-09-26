@@ -1,51 +1,138 @@
+/*
+ * INF1416 - Segurança da Informação
+ * Trabalho 2 - DigestCalculator
+ *
+ * Alunos:
+ * João Pedro Zaidman dos Santos Gonçalves - Matrícula: 2320464
+ * Breno de Andrade Soares - Matrícula: 2320363
+ */
+
 import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 public class DigestCalculator 
 {
     public static void main(String[] args) 
     {
-        if (args.length != 3) 
-        {
-            System.err.println("Quantidade de argumentos inválida.");
-            System.err.println("Uso: java DigestCalculator <MD5|SHA1|SHA256|SHA512> " 
-                            + "<caminho_da_lista_de_digests> <caminho_da_pasta>");
-            return;
-        }
-
-        DigestAlgorithm digestAlgorithm;
-
         try 
         {
-            digestAlgorithm = DigestAlgorithm.valueOf(args[0].toUpperCase());
+            validateArgumentCount(args);
+
+            DigestAlgorithm digestAlgorithm = parseDigestAlgorithm(args[0]);
+
+            validateDigestListFile(args[1]);
+
+            File monitoredFilesDirectory = validateMonitoredFilesDirectory(args[2]);
+
+            printDigests(monitoredFilesDirectory, digestAlgorithm);
+        } 
+        catch (IllegalArgumentException | IOException | NoSuchAlgorithmException exception) 
+        {
+            System.err.println(exception.getMessage());
+        }
+    }
+
+    private static void validateArgumentCount(String[] args) 
+    {
+        if (args.length != 3) 
+        {
+            throw new IllegalArgumentException(
+                "Quantidade de argumentos inválida."
+                + System.lineSeparator()
+                + "Uso: java DigestCalculator <MD5|SHA1|SHA256|SHA512> "
+                + "<caminho_da_lista_de_digests> <caminho_da_pasta>"
+            );
+        }
+    }
+
+    private static DigestAlgorithm parseDigestAlgorithm(String value) 
+    {
+        try 
+        {
+            return DigestAlgorithm.valueOf(value.toUpperCase());
         } 
         catch (IllegalArgumentException exception) 
         {
-            System.err.println("Algoritmo de digest inválido: " + args[0]);
-            System.err.println("Algoritmos permitidos: MD5, SHA1, SHA256 ou SHA512.");
-            return;
+            throw new IllegalArgumentException(
+                "Algoritmo de digest inválido: " + value
+                + System.lineSeparator()
+                + "Algoritmos permitidos: MD5, SHA1, SHA256 ou SHA512.",
+                exception
+            );
         }
+    }
 
-        String digestListPath = args[1];
-        String monitoredFilesPath = args[2];
-
-        File digestListFile = new File(digestListPath);
-        File monitoredFilesDirectory = new File(monitoredFilesPath);
+    private static void validateDigestListFile(String path) 
+    {
+        File digestListFile = new File(path);
 
         if (!digestListFile.exists() || !digestListFile.isFile()) 
         {
-            System.err.println("O arquivo com a lista de digests não foi encontrado: " + digestListPath);
-            return;
+            throw new IllegalArgumentException(
+                "O arquivo com a lista de digests não foi encontrado: " + path
+            );
         }
+    }
+
+    private static File validateMonitoredFilesDirectory(String path) 
+    {
+        File monitoredFilesDirectory = new File(path);
 
         if (!monitoredFilesDirectory.exists() || !monitoredFilesDirectory.isDirectory()) 
         {
-            System.err.println("A pasta dos arquivos monitorados não foi encontrada: " + monitoredFilesPath);
-            return;
+            throw new IllegalArgumentException(
+                "A pasta dos arquivos monitorados não foi encontrada: " + path
+            );
         }
 
-        System.out.println("Argumentos válidos.");
-        System.out.println("Algoritmo de digest: " + digestAlgorithm);
-        System.out.println("Arquivo com a lista de digests: " + digestListFile.getAbsolutePath());
-        System.out.println("Pasta dos arquivos monitorados: " + monitoredFilesDirectory.getAbsolutePath());
+        return monitoredFilesDirectory;
+    }
+
+    private static void printDigests(
+        File monitoredFilesDirectory,
+        DigestAlgorithm digestAlgorithm
+    ) throws IOException, NoSuchAlgorithmException 
+    {
+        FileDigestService digestService = new FileDigestService();
+
+        File[] monitoredFiles = monitoredFilesDirectory.listFiles(File::isFile);
+
+        if (monitoredFiles == null) 
+        {
+            throw new IOException(
+                "Não foi possível acessar os arquivos da pasta: "
+                + monitoredFilesDirectory.getPath()
+            );
+        }
+
+        for (File monitoredFile : monitoredFiles) 
+        {
+            String digestHex;
+
+            try 
+            {
+                digestHex = digestService.calculateDigest(monitoredFile, digestAlgorithm);
+            } 
+            catch (IOException exception) 
+            {
+                throw new IOException(
+                    "Erro ao ler o arquivo: " + monitoredFile.getName(),
+                    exception
+                );
+            } 
+            catch (NoSuchAlgorithmException exception) 
+            {
+                throw new NoSuchAlgorithmException(
+                    "Algoritmo não suportado pela JCA: " + digestAlgorithm
+                );
+            }
+
+            System.out.println(
+                monitoredFile.getName() + " "
+                + digestAlgorithm + " "
+                + digestHex
+            );
+        }
     }
 }
